@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Welcome to my Pet Shop ver2</title>
+    <title>Welcome to my Pet Shop</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -89,7 +88,7 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to my Pet Shop ver2a</h1>
+    <h1>Welcome to my Pet Shop</h1>
     
     <div class="pet-container">
         <img src="images/dog.png" alt="Happy Dog">
@@ -109,24 +108,28 @@
     <script>
         let newWorker;
 
-        // Show update banner
         function showUpdateBanner() {
             document.getElementById('update-banner').style.display = 'flex';
         }
 
-        // User clicks "Update Now"
         function updateApp() {
             if (newWorker) {
                 newWorker.postMessage({ type: 'SKIP_WAITING' });
             }
         }
 
-        // Register Service Worker with version query (Safari cache-busting)
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=1')
+            // Cache-busting version query (critical for Safari)
+            navigator.serviceWorker.register('sw.js?v=2', { scope: './' })
                 .then(registration => {
-                    console.log('Service Worker registered with scope:', registration.scope);
+                    console.log('Service Worker registered');
 
+                    // iOS-specific fix: check if a new worker is already waiting
+                    if (registration.waiting) {
+                        showUpdateBanner();
+                    }
+
+                    // Listen for future updates
                     registration.addEventListener('updatefound', () => {
                         newWorker = registration.installing;
                         newWorker.addEventListener('statechange', () => {
@@ -138,7 +141,7 @@
                 })
                 .catch(err => console.error('Service Worker registration failed:', err));
 
-            // Reload when new worker takes control
+            // Clean reload when new worker takes control
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 window.location.reload();
             });
