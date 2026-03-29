@@ -1,1 +1,148 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Welcome to my Pet Shop</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- iOS Safari / Home Screen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="My Pet Shop">
+    <link rel="apple-touch-icon" href="images/curler-hamster-icon.png">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff0f0, #f0fff0);
+            color: #333;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            margin: 40px 20px 30px;
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .pet-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        .pet-container img {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        .pet-container img:hover {
+            transform: scale(1.05);
+        }
+        #update-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffeb3b;
+            color: #333;
+            padding: 15px 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 9999;
+            text-align: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #update-banner button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to my Pet Shop</h1>
+    
+    <div class="pet-container">
+        <img src="images/dog.png" alt="Happy Dog">
+        <img src="images/cat.png" alt="Cute Cat">
+    </div>
+
+    <!-- Update Ready Banner -->
+    <div id="update-banner">
+        <div>🎉 A new version of My Pet Shop is ready!</div>
+        <button onclick="updateApp()">Update Now</button>
+    </div>
+
+    <footer>
+        PWA Pet Shop • Works offline • Installable on iPhone, iPad &amp; Mac
+    </footer>
+
+    <script>
+        let newWorker;
+
+        // Show update banner
+        function showUpdateBanner() {
+            document.getElementById('update-banner').style.display = 'flex';
+        }
+
+        // User clicks "Update Now"
+        function updateApp() {
+            if (newWorker) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+            }
+        }
+
+        // Register Service Worker with version query (Safari cache-busting)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js?v=1')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+
+                    registration.addEventListener('updatefound', () => {
+                        newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showUpdateBanner();
+                            }
+                        });
+                    });
+                })
+                .catch(err => console.error('Service Worker registration failed:', err));
+
+            // Reload when new worker takes control
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
+        }
+    </script>
+</body>
+</html>
