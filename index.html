@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Welcome to my Pet Shop</title>
+    <title>Welcome to my Pet Shop ver 66</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -88,7 +88,7 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to my Pet Shop</h1>
+    <h1>Welcome to my Pet Shop ver 66</h1>
     
     <div class="pet-container">
         <img src="images/dog.png" alt="Happy Dog">
@@ -97,12 +97,12 @@
 
     <!-- Update Ready Banner -->
     <div id="update-banner">
-        <div>🎉 A new version of My Pet Shop is ready!</div>
+        <div>🎉 A new version 66 of My Pet Shop is ready!</div>
         <button onclick="updateApp()">Update Now</button>
     </div>
 
     <footer>
-        PWA Pet Shop • Works offline • Installable on iPhone, iPad &amp; Mac
+        PWA Pet Shop ver 66 • Works offline • Installable on iPhone, iPad &amp; Mac
     </footer>
 
     <script>
@@ -120,12 +120,13 @@
 
         if ('serviceWorker' in navigator) {
             // Cache-busting version query (critical for Safari)
-            navigator.serviceWorker.register('sw.js?v=2', { scope: './' })
+            navigator.serviceWorker.register('sw.js?v=3', { scope: './' })
                 .then(registration => {
                     console.log('Service Worker registered');
 
-                    // iOS-specific fix: check if a new worker is already waiting
+                    // iOS + Chrome fix: check if a new worker is already waiting
                     if (registration.waiting) {
+                        newWorker = registration.waiting;   // ← this was missing
                         showUpdateBanner();
                     }
 
