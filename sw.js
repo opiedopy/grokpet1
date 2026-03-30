@@ -1,4 +1,4 @@
-const CACHE_NAME = 'grok-shop-42';
+const CACHE_NAME = 'grok-shop-42a';
 const ASSETS = [
   './',
   '/grokpet1/index.html',
