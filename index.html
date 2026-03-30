@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Welcome to my 9999grokPet Shop ver 77</title>
+    <title>Grok Pet Shop ver 42</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -11,7 +11,7 @@
     <!-- iOS Safari / Home Screen support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="My Pet Shop">
+    <meta name="apple-mobile-web-app-title" content="GrokPet">
     <link rel="apple-touch-icon" href="images/curler-hamster-icon.png">
     
     <style>
@@ -54,31 +54,7 @@
         .pet-container img:hover {
             transform: scale(1.05);
         }
-        #update-banner {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #ffeb3b;
-            color: #333;
-            padding: 15px 20px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 9999;
-            text-align: center;
-            flex-direction: column;
-            gap: 10px;
-        }
-        #update-banner button {
-            background: #e91e63;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
+        
         footer {
             margin-top: auto;
             padding: 20px;
@@ -88,65 +64,26 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to my 9999grokPet Shop ver 77</h1>
+    <h1>Welcome to Grok Pet Shop ver 42</h1>
     
     <div class="pet-container">
         <img src="images/dog.png" alt="Happy Dog">
         <img src="images/cat.png" alt="Cute Cat">
     </div>
-
-    <!-- Update Ready Banner -->
-    <div id="update-banner">
-        <div>🎉 A new version 77 of My Pet Shop is ready!</div>
-        <button onclick="updateApp()">Update Now</button>
-    </div>
-
+    
     <footer>
-        PWA Pet Shop 77• Works offline • Installable on iPhone, iPad &amp; Mac
+        PWA Pet Shop ver 42• Works offline • Installable on iPhone, iPad &amp; Mac
     </footer>
 
     <script>
-        let newWorker;
-
-        function showUpdateBanner() {
-            document.getElementById('update-banner').style.display = 'flex';
-        }
-
-        function updateApp() {
-            if (newWorker) {
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            // Cache-busting version query (critical for Safari)
-            navigator.serviceWorker.register('sw.js?v=4', { scope: './' })
-                .then(registration => {
-                    console.log('Service Worker registered');
-
-                    // iOS + Chrome safe check: only show banner if there's truly an update waiting
-                    if (registration.waiting && navigator.serviceWorker.controller) {
-                        newWorker = registration.waiting;
-                        showUpdateBanner();
-                    }
-
-                    // Listen for future updates (this path was working perfectly on iOS before)
-                    registration.addEventListener('updatefound', () => {
-                        newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                showUpdateBanner();
-                            }
-                        });
-                    });
-                })
-                .catch(err => console.error('Service Worker registration failed:', err));
-
-            // Clean reload when new worker takes control
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                window.location.reload();
-            });
-        }
-    </script>
+     if ('serviceWorker' in navigator) {
+// Cache-busting version query (kept for Safari compatibility)
+navigator.serviceWorker.register('sw.js?v=5', { scope: './' })
+.then(registration => {
+console.log('Service Worker registered');
+})
+.catch(err => console.error('Service Worker registration failed:', err));
+}
+</script>
 </body>
-</html>
+</html>  
